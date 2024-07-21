@@ -54,6 +54,8 @@ class Suppliers with ChangeNotifier {
     final url =
         'https://order-up-e0a41-default-rtdb.firebaseio.com/suppliers/$supplierId.json?auth=$token';
 
+    // print(url);
+
     try {
       await http.put(Uri.parse(url),
           body: json.encode({
@@ -90,6 +92,7 @@ class Suppliers with ChangeNotifier {
 
   Future updateSupplier(String id, Supplier newSupplier) async {
     final token = UserId.getAuthToken;
+    print(token);
     final supplierIndex = suppliers.indexWhere((supp) => supp.id == id);
     if (supplierIndex >= 0) {
       try {
@@ -99,33 +102,28 @@ class Suppliers with ChangeNotifier {
         if (currentSupplier.email != newSupplier.email) {
           await updateEmail(newSupplier.email);
         }
-        
+
         // Update password only if it has changed
         if (currentSupplier.password != newSupplier.password) {
           await updatePassword(newSupplier.password);
         }
 
-        final url = 'https://order-up-e0a41-default-rtdb.firebaseio.com/suppliers/$id.json?auth=$token';
+        final url =
+            'https://order-up-e0a41-default-rtdb.firebaseio.com/suppliers/$id.json?auth=$token';
 
-        // Prepare data to update, excluding email and password if they haven't changed
-        final updateData = {
-          'name': newSupplier.name,
-          'location': newSupplier.location,
-          'image': newSupplier.image,
-          'phoneNumber': newSupplier.phoneNumber,
-          'category': newSupplier.category,
-          'rate': newSupplier.rate,
-        };
+        print(url);
 
-        // Include email and password in update data only if they have changed
-        if (currentSupplier.email != newSupplier.email) {
-          updateData['email'] = newSupplier.email;
-        }
-        if (currentSupplier.password != newSupplier.password) {
-          updateData['password'] = newSupplier.password;
-        }
-
-        await http.patch(Uri.parse(url), body: json.encode(updateData));
+        await http.patch(Uri.parse(url),
+            body: json.encode({
+              'name': newSupplier.name,
+              'location': newSupplier.location,
+              'image': newSupplier.image,
+              'email': newSupplier.email,
+              'password': newSupplier.password,
+              'phoneNumber': newSupplier.phoneNumber,
+              'category': newSupplier.category,
+              'rate': newSupplier.rate,
+            }));
 
         _suppliers[supplierIndex] = newSupplier;
         notifyListeners();
@@ -135,6 +133,7 @@ class Suppliers with ChangeNotifier {
       }
     }
   }
+
   Future updateEmail(String newEmail) async {
     var token = UserId.getAuthToken;
     const url =

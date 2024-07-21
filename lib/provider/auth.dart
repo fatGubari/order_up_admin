@@ -39,6 +39,8 @@ class Auth with ChangeNotifier {
         ),
       );
 
+      UserId.setUserId(_userId);
+      UserId.setAuthToken(_token);
       notifyListeners();
     } catch (error) {
       print('Login Error: $error');
@@ -128,8 +130,6 @@ class Auth with ChangeNotifier {
   // Future signup(String email, String password) async {
   //   return _authenticate(email, password, 'signUp');
   // }
-
-
 
   bool get isAuth {
     return _token != null;

@@ -62,24 +62,37 @@ class _AddRestaurantState extends State<AddRestaurant> {
     });
 
     try {
-      await Provider.of<Auth>(context, listen: false).signup(
-        _emailController.text,
-        _passwordController.text,
-      );
-
-      final newRestaurant = Restaurant(
-        id: '', // Firebase will generate the ID
-        name: _nameController.text,
-        location: _locationController.text,
-        image: _imageController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-        phoneNumber: _phoneController.text,
-      );
-
-      // Add the restaurant using the provider method
-      await Provider.of<Restaurants>(context, listen: false)
-          .addRestaurant(newRestaurant);
+      final Restaurant newRestaurant;
+      if (widget.restaurant == null) {
+        await Provider.of<Auth>(context, listen: false).signup(
+          _emailController.text,
+          _passwordController.text,
+        );
+        newRestaurant = Restaurant(
+          id: '', // Firebase will generate the ID
+          name: _nameController.text,
+          location: _locationController.text,
+          image: _imageController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+          phoneNumber: _phoneController.text,
+        );
+        // Add the restaurant using the provider method
+        await Provider.of<Restaurants>(context, listen: false)
+            .addRestaurant(newRestaurant);
+      } else {
+        newRestaurant = Restaurant(
+          id: widget.restaurant!.id, // Firebase will generate the ID
+          name: _nameController.text,
+          location: _locationController.text,
+          image: _imageController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+          phoneNumber: _phoneController.text,
+        );
+        await Provider.of<Restaurants>(context, listen: false)
+            .updateRestaurant(widget.restaurant!.id, newRestaurant);
+      }
 
       Navigator.of(context)
           .pop(); // Assuming you want to close the current screen after adding

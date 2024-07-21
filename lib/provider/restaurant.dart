@@ -83,22 +83,111 @@ class Restaurants with ChangeNotifier {
 
   Future updateRestaurant(String id, Restaurant newRestaurant) async {
     final token = UserId.getAuthToken;
+
     final restaurantIndex = restaurants.indexWhere((rest) => rest.id == id);
     if (restaurantIndex >= 0) {
-      final url =
-          'https://order-up-e0a41-default-rtdb.firebaseio.com/restaurants/$id.json?auth=$token';
-      await http.patch(Uri.parse(url),
-          body: json.encode({
-            'name': newRestaurant.name,
-            'location': newRestaurant.location,
-            'image': newRestaurant.image,
-            'email': newRestaurant.email,
-            'password': newRestaurant.password,
-            'phoneNumber': newRestaurant.phoneNumber,
-          }));
+      try {
+        final currentRestaurant = restaurants[restaurantIndex];
 
-      _restaurants[restaurantIndex] = newRestaurant;
+        // Update email only if it has changed
+        if (currentRestaurant.email != newRestaurant.email) {
+          await updateEmail(newRestaurant.email);
+        }
+
+        // Update password only if it has changed
+        if (currentRestaurant.password != newRestaurant.password) {
+          await updatePassword(newRestaurant.password);
+        }
+
+        final url =
+            'https://order-up-e0a41-default-rtdb.firebaseio.com/restaurants/$id.json?auth=$token';
+
+        print(url);
+
+        await http.patch(Uri.parse(url),
+            body: json.encode({
+              'name': newRestaurant.name,
+              'location': newRestaurant.location,
+              'image': newRestaurant.image,
+              'email': newRestaurant.email,
+              'password': newRestaurant.password,
+              'phoneNumber': newRestaurant.phoneNumber,
+            }));
+
+        _restaurants[restaurantIndex] = newRestaurant;
+        notifyListeners();
+      } catch (error) {
+        print('Error updating supplier: $error');
+        rethrow;
+      }
+    }
+  }
+
+  Future updateEmail(String newEmail) async {
+    var token = UserId.getAuthToken;
+    const url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyB9iIqUoi9vBasvWiEr14lsrZForm27KqQ';
+
+    if (token == null) {
+      throw HttpException('Authentication token not available.');
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode({
+          'idToken': token,
+          'email': newEmail,
+          'returnSecureToken': true,
+        }),
+      );
+
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+
+      // Update local token if needed
+      token = responseData['idToken']; // Update token if needed
+      UserId.setAuthToken(token!); // Update the stored token
       notifyListeners();
+    } catch (error) {
+      print('Error updating email: $error');
+      rethrow;
+    }
+  }
+
+  Future updatePassword(String newPassword) async {
+    var token = UserId.getAuthToken;
+    const url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyB9iIqUoi9vBasvWiEr14lsrZForm27KqQ';
+
+    if (token == null) {
+      throw HttpException('Authentication token not available.');
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode({
+          'idToken': token,
+          'password': newPassword,
+          'returnSecureToken': true,
+        }),
+      );
+
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+
+      // Update local token if needed
+      token = responseData['idToken']; // Update token if needed
+      UserId.setAuthToken(token!); // Update the stored token
+      notifyListeners();
+    } catch (error) {
+      print('Error updating password: $error');
+      rethrow;
     }
   }
 

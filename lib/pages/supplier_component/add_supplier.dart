@@ -59,7 +59,7 @@ class _AddSupplierState extends State<AddSupplier> {
     super.dispose();
   }
 
-  Future<void> _saveForm() async {
+  Future _saveForm() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -69,25 +69,38 @@ class _AddSupplierState extends State<AddSupplier> {
     });
 
     try {
-      await Provider.of<Auth>(context, listen: false).signup(
-        _emailController.text,
-        _passwordController.text,
-      );
-
-      final supplierData = Supplier(
-          id: '',
-          name: _nameController.text,
-          location: _locationController.text,
-          image: _imageController.text,
-          email: _emailController.text,
-          password: _passwordController.text,
-          phoneNumber: _phoneController.text,
-          category: _categoryController.text,
-          rate: double.parse(_rateController.text));
-
-      // Add the restaurant using the provider method
-      await Provider.of<Suppliers>(context, listen: false)
-          .addSupplier(supplierData);
+      final Supplier supplierData;
+      if (widget.supplier == null) {
+        await Provider.of<Auth>(context, listen: false).signup(
+          _emailController.text,
+          _passwordController.text,
+        );
+        supplierData = Supplier(
+            id: '',
+            name: _nameController.text,
+            location: _locationController.text,
+            image: _imageController.text,
+            email: _emailController.text,
+            password: _passwordController.text,
+            phoneNumber: _phoneController.text,
+            category: _categoryController.text,
+            rate: double.parse(_rateController.text));
+        await Provider.of<Suppliers>(context, listen: false)
+            .addSupplier(supplierData);
+      } else {
+        supplierData = Supplier(
+            id: widget.supplier!.id,
+            name: _nameController.text,
+            location: _locationController.text,
+            image: _imageController.text,
+            email: _emailController.text,
+            password: _passwordController.text,
+            phoneNumber: _phoneController.text,
+            category: _categoryController.text,
+            rate: double.parse(_rateController.text));
+        await Provider.of<Suppliers>(context, listen: false)
+            .updateSupplier(widget.supplier!.id, supplierData);
+      }
 
       Navigator.of(context).pop();
     } catch (error) {
