@@ -71,6 +71,13 @@ class RestaurantTable extends StatelessWidget {
                           width: 50, // You can adjust the width and height
                           height: 50,
                           fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return Icon(
+                              Icons.account_circle,
+                              size: 50,
+                            );
+                          },
                         ),
                       ),
                     ),

@@ -87,6 +87,13 @@ class SupplierTable extends StatelessWidget {
                           width: 50, // You can adjust the width and height
                           height: 50,
                           fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return Icon(
+                              Icons.account_circle,
+                              size: 50,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -138,30 +145,30 @@ class SupplierTable extends StatelessWidget {
                           IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
-                                   showDialog(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: Text('Are you sure?'),
-                                content: Text(
-                                    'Do you want to block the restaurant from the list?'),
-                                actions: [
-                                  TextButton(
-                                    child: Text('No'),
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('Yes'),
-                                    onPressed: () {
-                                      suppliersProvider.deleteSupplier(
-                                          filteredSuppliers[index].id);
-                                      Navigator.of(ctx).pop();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: Text('Are you sure?'),
+                                  content: Text(
+                                      'Do you want to block the restaurant from the list?'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('No'),
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        suppliersProvider.deleteSupplier(
+                                            filteredSuppliers[index].id);
+                                        Navigator.of(ctx).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                           ),
                         ],
