@@ -153,18 +153,30 @@ class SupplierTable extends StatelessWidget {
                                       'Do you want to block the restaurant from the list?'),
                                   actions: [
                                     TextButton(
-                                      child: Text('No'),
                                       onPressed: () {
                                         Navigator.of(ctx).pop();
                                       },
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            Theme.of(context).iconTheme.color),
+                                        foregroundColor: WidgetStatePropertyAll(
+                                            Colors.black),
+                                      ),
+                                      child: Text('No'),
                                     ),
                                     TextButton(
-                                      child: Text('Yes'),
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            Theme.of(context).iconTheme.color),
+                                        foregroundColor: WidgetStatePropertyAll(
+                                            Colors.black),
+                                      ),
                                       onPressed: () {
                                         suppliersProvider.deleteSupplier(
                                             filteredSuppliers[index].id);
                                         Navigator.of(ctx).pop();
                                       },
+                                      child: Text('Yes'),
                                     ),
                                   ],
                                 ),

@@ -39,7 +39,7 @@ class _LocationPickerState extends State<LocationPicker> {
             IconButton(
               onPressed: _pickLocation,
               icon: const Icon(Icons.location_on),
-              color: Colors.blue,
+              color: Theme.of(context).iconTheme.color,
             ),
           ],
         ),

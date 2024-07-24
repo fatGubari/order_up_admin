@@ -250,6 +250,11 @@ class _AddSupplierState extends State<AddSupplier> {
                   ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: _saveForm,
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).iconTheme.color),
+                        foregroundColor: WidgetStatePropertyAll(Colors.black),
+                      ),
                       child:
                           Text(isEditing ? 'Update Supplier' : 'Add Supplier'),
                     ),

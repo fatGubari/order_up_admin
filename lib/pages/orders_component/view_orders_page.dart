@@ -91,6 +91,7 @@ class _ViewOrdersPageState extends State<ViewOrdersPage> {
                             children: [
                               CircleAvatar(
                                 radius: 30,
+                                backgroundColor: Theme.of(context).iconTheme.color,
                                 child: Text(order.resturantName[0]),
                               ),
                               SizedBox(width: 10),

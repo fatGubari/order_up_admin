@@ -222,6 +222,11 @@ class _AddRestaurantState extends State<AddRestaurant> {
                   ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: _saveForm,
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).iconTheme.color),
+                        foregroundColor: WidgetStatePropertyAll(Colors.black),
+                      ),
                       child: Text(
                           isEditing ? 'Update Restaurant' : 'Add Restaurant'),
                     ),
