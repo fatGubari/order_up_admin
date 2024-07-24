@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:order_up/models/location.dart';
 import 'package:order_up/pages/supplier_component/dialogs_and_validate.dart';
+import 'package:order_up/pages/supplier_component/location_picker.dart';
 import 'package:order_up/provider/auth.dart';
 import 'package:order_up/provider/supplier.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +24,7 @@ class _AddSupplierState extends State<AddSupplier> {
   late TextEditingController _rateController;
   late TextEditingController _phoneController;
   late TextEditingController _categoryController;
+  Location? selectedLocation;
 
   bool _isPasswordVisible = false;
   bool _isLoading = false;
@@ -30,8 +33,7 @@ class _AddSupplierState extends State<AddSupplier> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.supplier?.name ?? '');
-    _locationController =
-        TextEditingController(text: widget.supplier?.location ?? '');
+    selectedLocation = widget.supplier?.location;
     _imageController =
         TextEditingController(text: widget.supplier?.image ?? '');
     _emailController =
@@ -78,7 +80,7 @@ class _AddSupplierState extends State<AddSupplier> {
         supplierData = Supplier(
             id: '',
             name: _nameController.text,
-            location: _locationController.text,
+            location: selectedLocation,
             image: _imageController.text,
             email: _emailController.text,
             password: _passwordController.text,
@@ -91,7 +93,7 @@ class _AddSupplierState extends State<AddSupplier> {
         supplierData = Supplier(
             id: widget.supplier!.id,
             name: _nameController.text,
-            location: _locationController.text,
+            location: selectedLocation,
             image: _imageController.text,
             email: _emailController.text,
             password: _passwordController.text,
@@ -152,16 +154,9 @@ class _AddSupplierState extends State<AddSupplier> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _locationController,
-                decoration: InputDecoration(labelText: 'Location'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter supplier location';
-                  }
-                  return null;
-                },
-              ),
+              LocationPicker(
+                  setLocation: _setLocation,
+                  selectedLocationMap: selectedLocation),
               TextFormField(
                 controller: _imageController,
                 decoration: InputDecoration(labelText: 'Image URL'),
@@ -263,5 +258,11 @@ class _AddSupplierState extends State<AddSupplier> {
         ),
       ),
     );
+  }
+
+  void _setLocation(double latitude, double longitude) {
+    setState(() {
+      selectedLocation = Location(latitude: latitude, longitude: longitude);
+    });
   }
 }

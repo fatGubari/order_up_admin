@@ -60,7 +60,10 @@ class MyApp extends StatelessWidget {
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(0, 17, 161, 177)),
+        iconTheme:
+            IconThemeData(color: const Color.fromARGB(255, 236, 198, 73)),
       ),
     );
   }

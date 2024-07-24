@@ -73,8 +73,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   bool _isPasswordValid(String password) {
-    final passwordRegExp = RegExp(
-        r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$');
+    final passwordRegExp =
+        RegExp(r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$');
     return passwordRegExp.hasMatch(password);
   }
 
@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
               Icon(
                 Icons.admin_panel_settings,
                 size: 100,
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: Theme.of(context).iconTheme.color,
               ),
               SizedBox(height: 20),
               Text(
@@ -107,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
+                  hoverColor: Theme.of(context).iconTheme.color,
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -143,7 +144,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 12.0, horizontal: 24.0),
-                        child: Text('Login', style: TextStyle(color: Colors.white),),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     )
             ],

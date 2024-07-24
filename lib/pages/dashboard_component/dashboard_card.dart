@@ -23,8 +23,8 @@ class DashboardCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(icon, size: 48, color: Theme.of(context).colorScheme.inversePrimary,),
+          children: [
+            Icon(icon, size: 48, color: Theme.of(context).iconTheme.color,),
             SizedBox(height: 16),
             Text(
               title,

@@ -14,7 +14,7 @@ class SupplierTable extends StatelessWidget {
 
     final filteredSuppliers = suppliers.where((supplier) {
       final name = supplier.name.toLowerCase();
-      final location = supplier.location.toLowerCase();
+      final location = supplier.location.toString().toLowerCase();
       final email = supplier.email.toLowerCase();
       final category = supplier.category.toLowerCase();
       return name.contains(searchText.toLowerCase()) ||
@@ -78,7 +78,7 @@ class SupplierTable extends StatelessWidget {
                   cells: [
                     DataCell(Text(filteredSuppliers[index].id.toString())),
                     DataCell(Text(filteredSuppliers[index].name)),
-                    DataCell(Text(filteredSuppliers[index].location)),
+                    DataCell(Text(filteredSuppliers[index].location as String)),
                     DataCell(
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 3),

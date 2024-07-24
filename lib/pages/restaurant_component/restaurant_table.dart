@@ -66,19 +66,26 @@ class RestaurantTable extends StatelessWidget {
                     DataCell(
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 3),
-                        child: Image.network(
-                          filteredRestaurants[index].image,
-                          width: 50, // You can adjust the width and height
-                          height: 50,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return Icon(
-                              Icons.account_circle,
-                              size: 50,
-                            );
-                          },
-                        ),
+                        child: filteredRestaurants[index].image == null ||
+                                filteredRestaurants[index].image == ''
+                            ? Icon(
+                                Icons.account_circle,
+                                size: 50,
+                              )
+                            : Image.network(
+                                filteredRestaurants[index].image,
+                                width:
+                                    50, // You can adjust the width and height
+                                height: 50,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return Icon(
+                                    Icons.account_circle,
+                                    size: 50,
+                                  );
+                                },
+                              ),
                       ),
                     ),
                     DataCell(Text(filteredRestaurants[index].email)),
