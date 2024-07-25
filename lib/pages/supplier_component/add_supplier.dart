@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_up/models/location.dart';
 import 'package:order_up/pages/supplier_component/dialogs_and_validate.dart';
 import 'package:order_up/pages/supplier_component/location_picker.dart';
 import 'package:order_up/provider/auth.dart';
@@ -24,7 +23,7 @@ class _AddSupplierState extends State<AddSupplier> {
   late TextEditingController _rateController;
   late TextEditingController _phoneController;
   late TextEditingController _categoryController;
-  Location? selectedLocation;
+  String? selectedLocation;
 
   bool _isPasswordVisible = false;
   bool _isLoading = false;
@@ -265,9 +264,9 @@ class _AddSupplierState extends State<AddSupplier> {
     );
   }
 
-  void _setLocation(double latitude, double longitude) {
+  void _setLocation(String location) {
     setState(() {
-      selectedLocation = Location(latitude: latitude, longitude: longitude);
+      selectedLocation = location;
     });
   }
 }
