@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:order_up/models/location.dart';
 
 class LocationPicker extends StatefulWidget {
-  final Location? selectedLocationMap;
-  final void Function(double, double) setLocation;
+  final String? selectedLocationMap;
+  final void Function(String) setLocation;
   const LocationPicker(
       {super.key, this.selectedLocationMap, required this.setLocation});
 
@@ -13,7 +15,7 @@ class LocationPicker extends StatefulWidget {
 }
 
 class _LocationPickerState extends State<LocationPicker> {
-  Location? _currentLocation;
+  String? _currentLocation;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -78,13 +80,50 @@ class _LocationPickerState extends State<LocationPicker> {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+
+    String location =
+        await _getLocationAddress(position.latitude, position.longitude);
     setState(() {
-      _currentLocation =
-          Location(latitude: position.latitude, longitude: position.longitude);
+      _currentLocation = location;
     });
 
     // Here you can save the location to Firebase Realtime Database
-    widget.setLocation(position.latitude, position.longitude);
+    widget.setLocation(location);
+  }
+
+  Future<String> _getLocationAddress(double latitude, double longitude) async {
+    setLocaleIdentifier('en');
+
+    final places = await placemarkFromCoordinates(latitude, longitude);
+
+    log(places.length.toString());
+
+    for (var place in places) {
+      log(place.toString());
+    }
+
+    final localities = <String, int>{};
+    final subLocalities = <String, int>{};
+
+    for (var place in places) {
+      final local = place.locality;
+      final subLocal = place.subLocality;
+
+      if (local != null) {
+        localities[local] = (localities[local] ?? 0) + 1;
+      }
+
+      if (subLocal != null) {
+        subLocalities[subLocal] = (subLocalities[subLocal] ?? 0) + 1;
+      }
+    }
+
+    String local =
+        localities.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+    String subLocal =
+        subLocalities.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+
+    return '$local, $subLocal';
   }
 
   void _showSnackBar(String message) {

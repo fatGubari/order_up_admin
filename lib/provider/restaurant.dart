@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:order_up/models/generate_id.dart';
@@ -22,10 +24,11 @@ class Restaurants with ChangeNotifier {
         final List<Restaurant> loadedRestaurants = [];
         if (extractedData != null) {
           extractedData.forEach((restId, restData) {
+            log(restData.toString());
             loadedRestaurants.add(Restaurant(
               id: restId,
               name: restData['name'],
-              location: restData['location'],
+              location: restData['location'].toString(),
               image: restData['image'],
               email: restData['email'],
               password: restData['password'],
@@ -38,8 +41,9 @@ class Restaurants with ChangeNotifier {
       } else {
         print('Error fetching data: ${response.statusCode}');
       }
-    } catch (error) {
+    } catch (error, s) {
       print('Error: $error');
+      log(error.toString(), stackTrace: s);
       rethrow;
     }
   }

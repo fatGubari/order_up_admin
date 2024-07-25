@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:order_up/models/generate_id.dart';
-import 'package:order_up/models/location.dart';
 
 class Suppliers with ChangeNotifier {
   List<Supplier> _suppliers = [];
@@ -23,13 +24,13 @@ class Suppliers with ChangeNotifier {
         final List<Supplier> loadedRestaurants = [];
         if (extractedData != null) {
           extractedData.forEach((suppId, suppData) {
+            suppData['rate'] = suppData['rate'].toString().contains('null')
+                ? 0.0
+                : suppData['rate'];
             loadedRestaurants.add(Supplier(
               id: suppId,
               name: suppData['name'] ?? '',
-              location: suppData.value['location'] != null &&
-                      suppData.value['location'] is! String
-                  ? Location.fromMap(suppData.value['location'])
-                  : null,
+              location: suppData['location'].toString(),
               image: suppData['image'] ?? '',
               email: suppData['email'] ?? '',
               password: suppData['password'] ?? '',
@@ -46,8 +47,9 @@ class Suppliers with ChangeNotifier {
       } else {
         print('Error fetching data: ${response.statusCode}');
       }
-    } catch (error) {
+    } catch (error, s) {
       print('Error: $error');
+      log(error.toString(), stackTrace: s);
       rethrow;
     }
   }
@@ -64,12 +66,7 @@ class Suppliers with ChangeNotifier {
       await http.put(Uri.parse(url),
           body: json.encode({
             'name': supplier.name,
-            'location': supplier.location != null
-                ? {
-                    'latitude': supplier.location?.latitude,
-                    'longitude': supplier.location?.longitude
-                  }
-                : null,
+            'location': supplier.location,
             'image': supplier.image,
             'email': supplier.email,
             'password': supplier.password,
@@ -125,12 +122,7 @@ class Suppliers with ChangeNotifier {
         await http.patch(Uri.parse(url),
             body: json.encode({
               'name': newSupplier.name,
-              'location': newSupplier.location != null
-                  ? {
-                      'latitude': newSupplier.location?.latitude,
-                      'longitude': newSupplier.location?.longitude
-                    }
-                  : null,
+              'location': newSupplier.location,
               'image': newSupplier.image,
               'email': newSupplier.email,
               'password': newSupplier.password,
@@ -239,7 +231,7 @@ class Suppliers with ChangeNotifier {
 class Supplier {
   String id;
   final String name;
-  final Location? location;
+  final String? location;
   final String image;
   final String email;
   final String password;

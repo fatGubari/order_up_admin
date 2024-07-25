@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:order_up/pages/dashboard_component/dashboard_card.dart';
 import 'package:order_up/provider/order.dart';
@@ -5,6 +7,7 @@ import 'package:order_up/provider/product.dart';
 import 'package:order_up/provider/restaurant.dart';
 import 'package:order_up/provider/supplier.dart';
 import 'package:provider/provider.dart';
+
 import '../../widgets/sidebar.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -13,7 +16,8 @@ class DashboardPage extends StatelessWidget {
   Future<Map<String, int>> fetchCounts(BuildContext context) async {
     final ordersProvider = Provider.of<Orders>(context, listen: false);
     final productsProvider = Provider.of<Products>(context, listen: false);
-    final restaurantsProvider = Provider.of<Restaurants>(context, listen: false);
+    final restaurantsProvider =
+        Provider.of<Restaurants>(context, listen: false);
     final suppliersProvider = Provider.of<Suppliers>(context, listen: false);
 
     await Future.wait([
@@ -23,10 +27,13 @@ class DashboardPage extends StatelessWidget {
       suppliersProvider.fetchAndSetSuppliers(),
     ]);
 
+    log('finished loading data');
+
     return {
-      'restaurants': restaurantsProvider.restaurants.length ,
+      'restaurants': restaurantsProvider.restaurants.length,
       'products': productsProvider.products.length,
-      'soldProducts': ordersProvider.orders.fold(0, (sum, order) => sum + order.products.length),
+      'soldProducts': ordersProvider.orders
+          .fold(0, (sum, order) => sum + order.products.length),
       'suppliers': suppliersProvider.suppliers.length,
       'orders': ordersProvider.orders.length,
     };
